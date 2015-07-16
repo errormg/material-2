@@ -272,6 +272,7 @@ function multipage_form() {
 		</form>';
 
 	}
+	//End Page 2 of Update
 	elseif ($request_title == 'Design' && $page == NULL) {
 		echo '<form method="post" action="' . $this_page . '" id="design" enctype="multipart/form-data">
 
@@ -320,9 +321,9 @@ function multipage_form() {
 		</form>';
 		
 	}
-	// End of page 1 for Support
+	// End of page 1 for Design
 	elseif ($request_title == 'Design' && $page == 1) {
-		$support_select = $_POST['design'];
+		$design_select = $_POST['design'];
 		
 
 		if ($_FILES) {
@@ -354,7 +355,7 @@ function multipage_form() {
 		$page_one_table = 'request_form';
 		$page_one_inputs =  array(
 			'request_select' => $request_title,
-			'option_select' => $support_select,
+			'option_select' => $design_select,
 			'option_name' => $option_name,
 			'url' => $url,
 			'asset_upload' => $movefile['file'],
@@ -380,7 +381,84 @@ function multipage_form() {
 		</form>';
 
 	}
-	//End Page 2 of Update
+	//End Page 2 of Design
+	elseif ($request_title == 'Other' && $page == NULL) {
+		echo '<form method="post" action="' . $this_page . '" id="other" enctype="multipart/form-data">
+
+			<div class="other_select">
+		  		<label><input type="radio" name="other" id="domain" value="1" />Is it a domain issue?</label>
+				<label><input type="radio" name="other" id="discount_code" value="2" />You need a discount code for a book campaign?</label>
+				<label><input type="radio" name="other" id="handover" value="3" />The website needs to be handed over to author, agency or another publisher?</label>
+				<label><input type="radio" name="other" id="consultation" value="4" />Maybe you need a consultation on a project or an issue?</label>
+				<label><input type="radio" name="other" id="other" value="5" />OK. We are out of options. What happened?</label>
+			</div>
+			<section>
+				<div id="it_select" class="block">
+					<p>
+						Please, contact Service Desk by phone (extension x5900) or email (IT Service Desk (@RH, UK) <ITServiceDesk@penguinrandomhouse.co.uk>). Remember to mention the subject of your issue whether it\'s a domain, discount code or website handover.
+					</p>
+					<p>Still not sure? How about a consultation about your issue?</p>
+				</div>
+				<div id="consultation_select" class="block">
+					<p>
+						<input type="text" class="" name="oc_project" id="oc_project" placeholder="Project name" />
+					</p>
+					<p>
+						<input type="text" class="" name="cu_url" id="rf_url" placeholder="Does it have a URL yet?" />
+					</p>
+					<p>
+						<input type="date" class="" id="cu_date" name="cu_date" placeholder="Deadline" />
+					</p>
+					<p>
+						<textarea class="" id="oc_desc" name="oc_desc"></textarea>
+					</p>
+				</div>
+				<div id="other_select" class="block">
+					<p>
+						<textarea class="" id="fs_desc" name="fs_desc"></textarea>
+					</p>
+				</div>
+				<input type="hidden" value="1" name="page" />
+				<input type="submit" value="Next" class="submit-next" />
+			</section>
+		</form>';
+		
+	}
+	//End Page 1 of Other
+	elseif ($request_title == 'Other' && $page == 1) {
+		$other_select = $_POST['other'];
+		
+		if ($other_select == '1') {
+		
+			
+		} elseif ($other_select == '2') {
+	
+
+		}
+		} elseif ($other_select == '3') {
+	
+
+		} elseif ($other_select == '4') {
+	
+
+		} elseif ($other_select == '5') {
+	
+
+		}
+		echo '<h3>Contact Details</h3> ';
+		echo '<form method="post" action="' . $this_page .'">
+			<p><input type="text" name="person_name" id="person_name" placeholder="Your name, please" /></p>
+			<p><input type="email" name="email" id="email" placeholder="Email" /></p>
+			<p><input type="text" name="sign_off_name" id="sign_off_name" placeholder="Sign off contact (optional)" /></p>
+			<input type="hidden" value="2" name="page" />
+			<input type="hidden" value="' . $form_id . '" name="form_id" />
+			<input type="submit" value="Submit" />
+		</form>';
+
+	}
+
+
+	//End Page 2 of Other
 	// Contact Details page and send to email and Taiga.io
 	elseif ( $page == 2 ) {
 		$person_name = $_POST['person_name'];
