@@ -24,9 +24,9 @@ echo '<form method="post" action="" id="request_form">
 }
 */
 
-add_shortcode('multipage_form_support_sc', 'multipage_form_support');
+add_shortcode('multipage_form_sc', 'multipage_form');
 
-function multipage_form_support() {
+function multipage_form() {
 	global $wpdb;
 	$this_page = $_SERVER['REQUEST_URI'];
 	$page = $_POST['page'];
@@ -42,24 +42,27 @@ function multipage_form_support() {
 			<section>
 				<div id="bugfix_select" class="block">
 					<p>
-						<input type="text" class="" name="rf_url" id="rf_url" placeholder="Website URL" />
+						<input type="text" class="" name="bf_url" id="bf_url" placeholder="Website URL" />
 					</p>
 					<p>
-						<textarea class="" id="rf_desc" name="rf_desc"></textarea>
+						<textarea class="" id="bf_desc" name="bf_desc"></textarea>
 					</p>
 				</div>
 				<div id="tpw_select" class="block">
 					<p>
-						<input type="text" class="" id="rf_url" name="rf_url" placeholder="Website URL" />
+						<input type="text" class="" id="tpw_url" name="tpw_url" placeholder="Website URL" />
 					</p>
 					<p>
-						<input type="date" class="" id="rf_date" name="rf_date" />
+						<input type="date" class="" id="tpw_date" name="tpw_date" />
 					</p>
 					<p>
-						<input type="file" class="" id="rf_asset" name="rf_asset" />
+						<input type="text" class="" id="tpw_date_reason" name="tpw_date_reason" />
 					</p>
 					<p>
-						<textarea class="" id="rf_desc" name="rf_desc"></textarea>
+						<input type="file" class="" id="tpw_asset" name="tpw_asset" />
+					</p>
+					<p>
+						<textarea class="" id="tpw_desc" name="tpw_desc"></textarea>
 					</p>
 				</div>
 				<input type="hidden" value="1" name="page" />
@@ -71,14 +74,12 @@ function multipage_form_support() {
 	// End of page 1 for Support
 	elseif ($request_title == 'Support' && $page == 1) {
 		$support_select = $_POST['support'];
-		$option_name = '';
-		$url = '';
-		$deadline = '';
+
 		
 		if ($support_select == '1') {
-			$support_checked = 'Bug Fix';
-			$url = $_POST['rf_url'];
-			$desc = $_POST['rf_desc'];
+			$option_name = 'Bug Fix';
+			$url = $_POST['bf_url'];
+			$desc = $_POST['bf_desc'];
 			
 			$page_one_table = 'request_form';
 			$page_one_inputs =  array(
@@ -100,7 +101,7 @@ function multipage_form_support() {
 			if ($_FILES) {
 				if ( ! function_exists( 'wp_handle_upload' ) ) require_once( ABSPATH . 'wp-admin/includes/file.php' );
 				
-				$uploadedfile = $_FILES['rf_asset'];
+				$uploadedfile = $_FILES['tpw_asset'];
 				$upload_overrides = array( 'test_form' => false );
 				$movefile = wp_handle_upload( $uploadedfile, $upload_overrides );
 				    if ( $movefile ) {
@@ -111,9 +112,10 @@ function multipage_form_support() {
 			}
 			
 			$option_name = 'Third Party Website';
-			$url = $_POST['rf_url'];
-			$desc = $_POST['rf_desc'];
-			$deadline = $_POST['rf_date'];
+			$url = $_POST['tpw_url'];
+			$desc = $_POST['tpw_desc'];
+			$deadline = $_POST['tpw_date'];
+			$deadline_reason = $_POST['tpw_date_reason'];
 			
 			$page_one_table = 'request_form';
 			$page_one_inputs =  array(
@@ -124,6 +126,7 @@ function multipage_form_support() {
 				'asset_upload' => $movefile['file'],
 				'description' => $desc,
 				'deadline' => $deadline,
+				'deadline_reason' => $deadline_reason,
 				'page' => $page
 			);
 		
@@ -154,27 +157,33 @@ function multipage_form_support() {
 			<section>
 				<div id="content_select" class="block">
 					<p>
-						<input type="text" class="" name="rf_url" id="rf_url" placeholder="Website URL" />
+						<input type="text" class="" name="cu_url" id="rf_url" placeholder="Website URL" />
 					</p>
 					<p>
-						<input type="date" class="" id="rf_date" name="rf_date" />
+						<input type="date" class="" id="cu_date" name="cu_date" />
 					</p>
 					<p>
-						<textarea class="" id="rf_desc" name="rf_desc"></textarea>
+						<input type="date" class="" id="cu_date_reason" name="cu_date_reason" />
+					</p>
+					<p>
+						<textarea class="" id="cu_desc" name="cu_desc"></textarea>
 					</p>
 				</div>
 				<div id="feature_select" class="block">
 					<p>
-						<input type="text" class="" id="rf_url" name="rf_url" placeholder="Website URL" />
+						<input type="text" class="" id="fs_url" name="fs_url" placeholder="Website URL" />
 					</p>
 					<p>
-						<input type="date" class="" id="rf_date" name="rf_date" />
+						<input type="date" class="" id="fs_date" name="fs_date" />
 					</p>
 					<p>
-						<input type="file" class="" id="rf_asset" name="rf_asset" />
+						<input type="date" class="" id="fs_date_reason" name="fs_date_reason" />
 					</p>
 					<p>
-						<textarea class="" id="rf_desc" name="rf_desc"></textarea>
+						<input type="file" class="" id="fs_asset" name="fs_asset" />
+					</p>
+					<p>
+						<textarea class="" id="fs_desc" name="fs_desc"></textarea>
 					</p>
 				</div>
 				<input type="hidden" value="1" name="page" />
@@ -186,15 +195,13 @@ function multipage_form_support() {
 	//End Page 1 of Update
 	elseif ($request_title == 'Update' && $page == 1) {
 		$update_select = $_POST['update'];
-		$option_name = '';
-		$url = '';
-		$deadline = '';
 		
 		if ($update_select == '1') {
 			$option_name = 'Content';
-			$url = $_POST['rf_url'];
-			$deadline = $_POST['rf_date'];
-			$desc = $_POST['rf_desc'];
+			$url = $_POST['cu_url'];
+			$deadline = $_POST['cu_date'];
+			$deadline_reason = $_POST['cu_date_reason'];
+			$desc = $_POST['cu_desc'];
 			
 			$page_one_table = 'request_form';
 			$page_one_inputs =  array(
@@ -203,6 +210,7 @@ function multipage_form_support() {
 				'option_name' => $option_name,
 				'url' => $url,
 				'deadline' => $deadline,
+				'deadline_reason' => $deadline_reason,
 				'description' => $desc,
 				'page' => $page
 			);
@@ -218,7 +226,7 @@ function multipage_form_support() {
 			if ($_FILES) {
 				if ( ! function_exists( 'wp_handle_upload' ) ) require_once( ABSPATH . 'wp-admin/includes/file.php' );
 				
-				$uploadedfile = $_FILES['rf_asset'];
+				$uploadedfile = $_FILES['fs_asset'];
 				$upload_overrides = array( 'test_form' => false );
 				$movefile = wp_handle_upload( $uploadedfile, $upload_overrides );
 				    if ( $movefile ) {
@@ -229,9 +237,10 @@ function multipage_form_support() {
 			}
 			
 			$option_name = 'New Feature';
-			$url = $_POST['rf_url'];
-			$desc = $_POST['rf_desc'];
-			$deadline = $_POST['rf_date'];
+			$url = $_POST['fs_url'];
+			$desc = $_POST['fs_desc'];
+			$deadline = $_POST['sf_date'];
+			$deadline_reason = $_POST['fs_date_reason'];
 			
 			$page_one_table = 'request_form';
 			$page_one_inputs =  array(
@@ -242,6 +251,7 @@ function multipage_form_support() {
 				'asset_upload' => $movefile['file'],
 				'description' => $desc,
 				'deadline' => $deadline,
+				'deadline_reason' => $deadline_reason,
 				'page' => $page
 			);
 		
@@ -251,6 +261,114 @@ function multipage_form_support() {
 			$form_id = $wpdb->insert_id;
 
 		}
+		echo '<h3>Contact Details</h3> ';
+		echo '<form method="post" action="' . $this_page .'">
+			<p><input type="text" name="person_name" id="person_name" placeholder="Your name, please" /></p>
+			<p><input type="email" name="email" id="email" placeholder="Email" /></p>
+			<p><input type="text" name="sign_off_name" id="sign_off_name" placeholder="Sign off contact (optional)" /></p>
+			<input type="hidden" value="2" name="page" />
+			<input type="hidden" value="' . $form_id . '" name="form_id" />
+			<input type="submit" value="Submit" />
+		</form>';
+
+	}
+	elseif ($request_title == 'Design' && $page == NULL) {
+		echo '<form method="post" action="' . $this_page . '" id="design" enctype="multipart/form-data">
+
+				<p>
+					<input type="text" class="" name="rf_brand" id="rf_brand" placeholder="Brand" />
+				</p>
+				<p>
+					<input type="text" class="" name="rf_channel" id="rf_channel" placeholder="Channel" />
+				</p>
+				<p>
+					<input type="text" class="" name="rf_project" id="rf_project" placeholder="Project" />
+				</p>
+				<p>Please, describe the project and items required (e.g. banner, website, illustration, social).</p>
+				<p>
+					<textarea class="" id="rf_desc" name="rf_desc"></textarea>
+				</p>
+				<p>
+					<input type="date" class="" id="rf_date" name="rf_date" />
+				</p>
+				<p>
+					<input type="text" class="" id="rf_date_reason" name="rf_date_reason" />
+				</p>
+				<p>Please attach a separate copy document, a mood board and anything else required in a zip-file.</p>
+				<p>
+					<input type="file" class="" id="rf_asset" name="rf_asset" />
+				</p>
+				<p>Creative design</p>
+				<p>
+					<label>Who are we talking to?</label>
+					<textarea class="" id="rf_question_1" name="rf_question_1"></textarea>
+				</p>
+				<p>
+					<label>What do we already know?</label>
+					<textarea class="" id="rf_question_2" name="rf_question_2"></textarea>
+				</p>
+				<p>
+					<label>How do you intend to intrigue the consumer?</label>
+					<textarea class="" id="rf_question_3" name="rf_question_3"></textarea>
+				</p>
+				<p>
+					<label>What is the main message?</label>
+					<textarea class="" id="rf_question_4" name="rf_question_4"></textarea>
+				</p>
+			<input type="hidden" value="1" name="page" />
+			<input type="submit" value="Next" class="next" />
+		</form>';
+		
+	}
+	// End of page 1 for Support
+	elseif ($request_title == 'Design' && $page == 1) {
+		$support_select = $_POST['design'];
+		
+
+		if ($_FILES) {
+			if ( ! function_exists( 'wp_handle_upload' ) ) require_once( ABSPATH . 'wp-admin/includes/file.php' );
+			
+			$uploadedfile = $_FILES['rf_asset'];
+			$upload_overrides = array( 'test_form' => false );
+			$movefile = wp_handle_upload( $uploadedfile, $upload_overrides );
+			    if ( $movefile ) {
+			        echo "File is valid, and was successfully uploaded.\n";
+			    } else {
+			        echo "Possible file upload attack!\n";
+			    } 
+		}
+		
+		$option_name = $_POST['rf_project'];
+		$brand = $_POST['rf_brand'];
+		$channel = $_POST['rf_channel'];
+		$desc = $_POST['rf_desc'];
+		$question_1 = $_POST['rf_question_1'];
+		$question_2 = $_POST['rf_question_2'];
+		$question_3 = $_POST['rf_question_3'];
+		$question_4 = $_POST['rf_question_4'];
+		$final_desc = "<p><strong>Brand:</strong> " . $brand . "</p><p><strong>Channel:</strong> " . $channel . "</p><strong>Description:</strong> " . $desc . "</p><p><strong>Who are we talking to?</strong> " . $question_1 . "</p><p><strong>What do we already know?</strong> " . $question_2 . "</p><p><strong>How do you intend to intrigue the consumer?</strong> " . $question_3 . "</p><p><strong>What is the main message?</strong> " . $question_4 . "</p>";
+		$deadline = $_POST['rf_date'];
+		
+		//json_decode($desc);
+		
+		$page_one_table = 'request_form';
+		$page_one_inputs =  array(
+			'request_select' => $request_title,
+			'option_select' => $support_select,
+			'option_name' => $option_name,
+			'url' => $url,
+			'asset_upload' => $movefile['file'],
+			'description' => $final_desc,
+			'deadline' => $deadline,
+			'page' => $page
+		);
+	
+		//  Insert the data into a new row
+		$insert_page_one  =   $wpdb->insert($page_one_table, $page_one_inputs);
+		//    Grab the ID of the row we inserted for later use
+		$form_id = $wpdb->insert_id;
+
+		
 		echo '<h3>Contact Details</h3> ';
 		echo '<form method="post" action="' . $this_page .'">
 			<p><input type="text" name="person_name" id="person_name" placeholder="Your name, please" /></p>
@@ -293,9 +411,14 @@ function multipage_form_support() {
 		$subj = 'Request Form – '.$data_check->request_select .' – '. $data_check->option_name;
 		
 		//Body of email message
-		$body = "Website URL: ".$data_check->url."\n Deadline: ".$data_check->deadline."\n Description: ".$data_check->description . "\n Contact Person: ".$data_check->person_name . "\n Email: ".$data_check->email;
+		if($data_check->option_name == 'Support' || $data_check->option_name == 'Update' ) {
+			$body = "<p>Website URL: ".$data_check->url."</p><p>Description: ".$data_check->description . "</p><p>Deadline: ".$data_check->deadline."</p><p>Contact Person: ".$data_check->person_name . "</p><p>Email: ".$data_check->email. "</p><p>Sign-off: " . $data_check->sign_off_name ."</p>";
+		} else {
+			$body = "<p>Description: ".$data_check->description . "</p><p>Deadline: ".$data_check->deadline."</p><p>Contact Person: ".$data_check->person_name . "</p><p>Email: ".$data_check->email . "</p><p>Sign-off: " . $data_check->sign_off_name ."</p>";
+		}
+		
 		// Headers and attachments
-		$headers .= 'Content-Type: text/plain; charset=utf-8';
+		$headers .= 'Content-Type: text/html; charset=utf-8';
 		$attachments = array($data_check->asset_upload);
 		
 		if (wp_mail($multiple_recipients, $subj, $body, $headers, $attachments)) {
@@ -322,9 +445,13 @@ function multipage_form_support() {
 		);
 		
 		// Encode subject and description for better readability
-		$data_subject = $data_check->option_name . ' – ' . $data_check->url;
-		$data_description = '<p>URL: '. $data_check->url .'</p><p>Deadline: ' . $data_check->deadline .'</p><p>Description: '.$data_check->description.'</p><p>Contact Person: ' . $data_check->person_name . '</p><p>Email: ' . $data_check->email . '</p><p>Sign-off: ' . $data_check->sign_off_name . '</p>';
-		
+		if($data_check->option_name == 'Support' || $data_check->option_name == 'Update' ) {
+			$data_subject = $data_check->option_name . ' – ' . $data_check->url;
+			$data_description = '<p>URL: '. $data_check->url .'</p><p>Deadline: ' . $data_check->deadline .'</p><p>Description: '.$data_check->description.'</p><p>Contact Person: ' . $data_check->person_name . '</p><p>Email: ' . $data_check->email . '</p><p>Sign-off: ' . $data_check->sign_off_name . '</p>';
+		} else {
+			$data_subject = $data_check->option_name;
+			$data_description = $data_check->description.'<p>Deadline: ' . $data_check->deadline .'</p><p>Contact Person: ' . $data_check->person_name . '</p><p>Email: ' . $data_check->email . '</p><p>Sign-off: ' . $data_check->sign_off_name . '</p>';
+		}
 		json_encode($data_subject);
 		json_encode($data_description);
 		
