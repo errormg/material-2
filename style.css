@@ -1,0 +1,43 @@
+/**
+ * style.css
+ *
+ * Theme Name: Material Penguin
+ * Description: Penguin Random House Dev & Design Team
+ */
+
+/* You can write your own css code below to override the default style */
+
+.site-header, .banner {
+	background: #ff6829;
+}
+.banner {
+	height: 250px;
+}
+body {
+	font-family: "Karla", Helvetica, Arial, sans-serif;
+	font-size: 14px;
+	line-height: 1.428571429;
+	color: #333333;
+	background-color: #fff;
+}
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6, .site-menu li a {
+	font-family: 'Source Sans Pro';
+	font-weight: 500;
+	line-height: 1.1;
+}
+
+/* Request Form styles */
+#bugfix_select,
+#tpw_select,
+#content_select,
+#feature_select,
+input.submit-next {
+	display: none;
+}
+form#support section {
+	position: relative;
+}
+form#support section #bugfix_select,
+form#support section #tpw_select {
+	/*position: absolute;*/
+}
