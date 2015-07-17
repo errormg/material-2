@@ -157,7 +157,7 @@ function multipage_form() {
 			<section>
 				<div id="content_select" class="block">
 					<p>
-						<input type="text" class="" name="cu_url" id="rf_url" placeholder="Website URL" />
+						<input type="text" class="" name="cu_url" id="cu_url" placeholder="Website URL" />
 					</p>
 					<p>
 						<input type="date" class="" id="cu_date" name="cu_date" />
@@ -404,10 +404,10 @@ function multipage_form() {
 						<input type="text" class="" name="oc_project" id="oc_project" placeholder="Project name" />
 					</p>
 					<p>
-						<input type="text" class="" name="cu_url" id="rf_url" placeholder="Does it have a URL yet?" />
+						<input type="text" class="" name="oc_url" id="oc_url" placeholder="Does it have a URL yet?" />
 					</p>
 					<p>
-						<input type="date" class="" id="cu_date" name="cu_date" placeholder="Deadline" />
+						<input type="date" class="" id="oc_date" name="oc_date" placeholder="Deadline" />
 					</p>
 					<p>
 						<textarea class="" id="oc_desc" name="oc_desc"></textarea>
@@ -415,7 +415,7 @@ function multipage_form() {
 				</div>
 				<div id="other_select" class="block">
 					<p>
-						<textarea class="" id="fs_desc" name="fs_desc"></textarea>
+						<textarea class="" id="os_desc" name="os_desc"></textarea>
 					</p>
 				</div>
 				<input type="hidden" value="1" name="page" />
@@ -428,21 +428,46 @@ function multipage_form() {
 	elseif ($request_title == 'Other' && $page == 1) {
 		$other_select = $_POST['other'];
 		
-		if ($other_select == '1') {
-		
+		if ($other_select == '4') {
+			$option_name = 'Consultation';
+			$project = $_POST['oc_project'];
+			$url = $_POST['oc_url'];
+			$deadline = $_POST['oc_date'];
+			$desc = $_POST['oc_desc'];
 			
-		} elseif ($other_select == '2') {
-	
-
-		}
-		} elseif ($other_select == '3') {
-	
-
-		} elseif ($other_select == '4') {
-	
+			$page_one_table = 'request_form';
+			$page_one_inputs =  array(
+				'request_select' => $option_name,
+				'option_select' => $other_select,
+				'option_name' => $project,
+				'url' => $url,
+				'deadline' => $deadline,
+				'description' => $desc,
+				'page' => $page
+			);
+			
+			//  Insert the data into a new row
+			$insert_page_one  =   $wpdb->insert($page_one_table, $page_one_inputs);
+			//    Grab the ID of the row we inserted for later use
+			$form_id = $wpdb->insert_id;
 
 		} elseif ($other_select == '5') {
-	
+			$option_name = 'Mystery';
+			$desc = $_POST['os_desc'];
+			
+			$page_one_table = 'request_form';
+			$page_one_inputs =  array(
+				'request_select' => $request_title,
+				'option_select' => $other_select,
+				'option_name' => $option_name,
+				'description' => $desc,
+				'page' => $page
+			);
+			
+			//  Insert the data into a new row
+			$insert_page_one  =   $wpdb->insert($page_one_table, $page_one_inputs);
+			//    Grab the ID of the row we inserted for later use
+			$form_id = $wpdb->insert_id;
 
 		}
 		echo '<h3>Contact Details</h3> ';
